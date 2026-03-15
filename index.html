@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ESL Warmup Wizard 🗣️</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#FFC700;min-height:100vh;padding-bottom:60px;}
+.hdr{background:#222;padding:36px 20px 28px;text-align:center;position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 50%,#FFC70022 0%,transparent 50%),radial-gradient(circle at 80% 20%,#FFC70011 0%,transparent 40%);}
+.hdr-inner{position:relative;z-index:1;}
+.hdr-emoji{font-size:52px;margin-bottom:8px;}
+.hdr h1{font-family:'Fredoka One',cursive;font-size:clamp(24px,5vw,44px);color:#FFC700;margin:0;}
+.hdr p{color:#ffffff88;font-size:14px;font-weight:600;margin-top:8px;}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px;}
+.card{background:#fff;border-radius:24px;border:3px solid #222;padding:26px 24px;margin-top:24px;box-shadow:6px 6px 0 #222;}
+label.lbl{display:block;margin-bottom:8px;font-family:'Fredoka One',cursive;font-size:15px;color:#222;}
+.mb{margin-bottom:18px;}
+.pills{display:flex;gap:8px;flex-wrap:wrap;}
+.pill{padding:8px 16px;border-radius:40px;border:2.5px solid #222;background:#f5f5f5;font-family:'Fredoka One',cursive;font-size:13px;cursor:pointer;transition:all 0.15s;}
+.pill.on{background:#FFC700;box-shadow:3px 3px 0 #222;transform:scale(1.07);}
+.type-btn{padding:9px 16px;border-radius:40px;border:2.5px solid #ddd;background:#f9f9f9;font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.15s;color:#999;}
+.type-btn.on{border-color:#222;box-shadow:3px 3px 0 #222;transform:scale(1.05);color:#222;}
+select,input[type=number],input[type=text]{width:100%;padding:11px 14px;border-radius:14px;border:2.5px solid #222;font-size:14px;font-family:'Nunito',sans-serif;background:#fff;color:#222;outline:none;font-weight:600;appearance:none;-webkit-appearance:none;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.row{display:flex;gap:8px;}
+.mode-btn{flex:1;padding:10px 6px;border-radius:12px;border:2.5px solid #222;background:#f5f5f5;font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.12s;}
+.mode-btn.on{background:#FFC700;box-shadow:2px 2px 0 #222;}
+.gen-btn{width:100%;padding:15px;background:#FFC700;color:#222;border:3px solid #222;border-radius:16px;font-family:'Fredoka One',cursive;font-size:19px;cursor:pointer;box-shadow:4px 4px 0 #222;transition:all 0.15s;margin-top:4px;}
+.gen-btn:disabled{background:#eee;color:#aaa;box-shadow:none;cursor:not-allowed;}
+.gen-btn:not(:disabled):hover{transform:scale(1.02) translateY(-2px);}
+.hint{text-align:center;margin-top:8px;color:#aaa;font-size:13px;font-weight:600;min-height:20px;}
+.spinner-wrap{background:#222;border-radius:24px;border:3px solid #222;margin-top:24px;box-shadow:6px 6px 0 #222;display:flex;flex-direction:column;align-items:center;gap:14px;padding:36px;}
+.spinner{width:52px;height:52px;border:5px solid #fff3;border-top:5px solid #fff;border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.act-section{margin-top:24px;}
+.act-section h2{font-family:'Fredoka One',cursive;font-size:22px;color:#222;margin-bottom:14px;}
+.act-cards{display:flex;flex-direction:column;gap:14px;}
+.act-card{background:#fffbe6;border:3px solid #e8c400;border-radius:20px;padding:18px 22px;animation:slideUp 0.4s ease both;}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.act-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
+.act-emoji{font-size:30px;flex-shrink:0;}
+.act-name{font-family:'Fredoka One',cursive;font-size:19px;color:#222;line-height:1.3;}
+.badges{display:flex;gap:7px;margin-top:6px;flex-wrap:wrap;}
+.badge{border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;border:1.5px solid #222;display:inline-block;}
+.by{background:#FFC700;color:#222;}
+.bw{background:#fff;color:#555;border-color:#ddd;}
+.bg{background:#f0fff0;color:#2a7a2a;border-color:#7dcf7d;}
+.bp{background:#fff0f6;color:#a0306a;border-color:#f0a0c0;}
+.act-desc{margin:8px 0;color:#444;font-size:14px;line-height:1.75;}
+.tip-box{background:#fff9e0;border-radius:12px;padding:10px 14px;margin-top:10px;border:1.5px dashed #e8c400;font-size:13px;color:#555;line-height:1.6;}
+.dl-btn{width:100%;margin-top:18px;padding:15px;background:#222;color:#FFC700;border:3px solid #222;border-radius:16px;font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:4px 4px 0 #0003;transition:all 0.15s;}
+.dl-btn:hover{background:#333;transform:scale(1.02) translateY(-2px);}
+.regen-btn{width:100%;margin-top:10px;padding:12px;background:transparent;color:#222;border:2.5px dashed #222;border-radius:14px;font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer;transition:all 0.15s;}
+.regen-btn:hover{background:#fff3;}
+.err-box{background:#fff;border:3px solid #ff4444;border-radius:16px;padding:16px;margin-top:20px;color:#ff4444;font-weight:700;font-size:14px;word-break:break-word;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-emoji">🗣️✨</div>
+    <h1>ESL Warmup Wizard</h1>
+    <p>Generate fun, low-resource warm-up activities for your ESL class!</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="card">
+
+    <!-- Grade -->
+    <div class="mb">
+      <label class="lbl">🎒 Grade Level <span style="color:red">*</span></label>
+      <div class="pills" id="grade-pills">
+        <button class="pill" data-v="K-2">🌱 K–2</button>
+        <button class="pill" data-v="3-5">🌿 3–5</button>
+        <button class="pill" data-v="6-8">🌳 6–8</button>
+        <button class="pill" data-v="9-12">🎓 9–12</button>
+        <button class="pill" data-v="Adult">🧑‍💼 Adult</button>
+      </div>
+    </div>
+
+    <!-- Activity Types -->
+    <div class="mb">
+      <label class="lbl">🎨 Activity Types <span style="font-size:12px;font-weight:600;color:#888">(select all that apply)</span></label>
+      <div class="pills" id="type-pills">
+        <button class="type-btn on" data-v="general" style="background:#e8f4ff">🗣️ General ESL</button>
+        <button class="type-btn on" data-v="fln" style="background:#f0fff0">🔤 FLN</button>
+        <button class="type-btn on" data-v="bilingual" style="background:#fff0f6">🇮🇳 Bilingual (Kannada)</button>
+      </div>
+    </div>
+
+    <!-- Meeting Type -->
+    <div class="mb">
+      <label class="lbl">📅 Meeting Type <span style="color:red">*</span></label>
+      <select id="meeting">
+        <option value="">Select a meeting type...</option>
+        <option>First Day of Class</option>
+        <option>Start of a New Unit</option>
+        <option>After a Long Break</option>
+        <option>Regular Class Warmup</option>
+        <option>Before a Test/Assessment</option>
+        <option>End of Semester</option>
+      </select>
+    </div>
+
+    <!-- Mode + Proficiency -->
+    <div class="grid2 mb">
+      <div>
+        <label class="lbl">🖥️ Mode</label>
+        <div class="row">
+          <button class="mode-btn on" id="btn-inp">🏫 In-person</button>
+          <button class="mode-btn" id="btn-virt">💻 Virtual</button>
+        </div>
+      </div>
+      <div>
+        <label class="lbl">📊 Proficiency</label>
+        <select id="prof">
+          <option value="">Any</option>
+          <option>Beginner</option>
+          <option>Intermediate</option>
+          <option>Advanced</option>
+          <option>Mixed</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Class Size + Time -->
+    <div class="grid2 mb">
+      <div>
+        <label class="lbl">👥 Class Size</label>
+        <input type="number" id="size" placeholder="e.g. 24" min="1" max="100"/>
+      </div>
+      <div>
+        <label class="lbl">⏱ Time Available</label>
+        <input type="text" id="time" placeholder="e.g. 10 mins"/>
+      </div>
+    </div>
+
+    <button class="gen-btn" id="gen-btn" disabled onclick="generate()">✨ Generate Activities!</button>
+    <p class="hint" id="hint">Select a grade level to continue</p>
+  </div>
+
+  <div id="spinner-area"></div>
+  <div id="err-area"></div>
+  <div id="results-area"></div>
+</div>
+
+<script>
+const state = { grade: "", types: ["general","fln","bilingual"], mode: "In-person" };
+let lastActivities = [], lastMeta = {};
+
+function updateBtn() {
+  const meeting = document.getElementById("meeting").value;
+  const ok = state.grade && meeting && state.types.length > 0;
+  document.getElementById("gen-btn").disabled = !ok;
+  const hint = document.getElementById("hint");
+  if (!state.grade) hint.textContent = "Select a grade level to continue";
+  else if (!meeting) hint.textContent = "Select a meeting type to continue";
+  else if (!state.types.length) hint.textContent = "Pick at least one activity type";
+  else hint.textContent = "";
+}
+
+document.getElementById("grade-pills").addEventListener("click", e => {
+  const b = e.target.closest(".pill"); if (!b) return;
+  document.querySelectorAll("#grade-pills .pill").forEach(p => p.classList.remove("on"));
+  b.classList.add("on"); state.grade = b.dataset.v; updateBtn();
+});
+
+document.getElementById("type-pills").addEventListener("click", e => {
+  const b = e.target.closest(".type-btn"); if (!b) return;
+  b.classList.toggle("on");
+  const cols = { general:"#e8f4ff", fln:"#f0fff0", bilingual:"#fff0f6" };
+  b.style.background = b.classList.contains("on") ? cols[b.dataset.v] : "#f9f9f9";
+  state.types = [...document.querySelectorAll("#type-pills .type-btn.on")].map(x => x.dataset.v);
+  updateBtn();
+});
+
+document.getElementById("meeting").addEventListener("change", updateBtn);
+document.getElementById("btn-inp").addEventListener("click", () => { document.getElementById("btn-inp").classList.add("on"); document.getElementById("btn-virt").classList.remove("on"); state.mode = "In-person"; });
+document.getElementById("btn-virt").addEventListener("click", () => { document.getElementById("btn-virt").classList.add("on"); document.getElementById("btn-inp").classList.remove("on"); state.mode = "Virtual"; });
+
+async function generate() {
+  const grade = state.grade;
+  const meeting = document.getElementById("meeting").value;
+  const size = document.getElementById("size").value;
+  const time = document.getElementById("time").value;
+  const prof = document.getElementById("prof").value;
+  const types = state.types;
+
+  document.getElementById("results-area").innerHTML = "";
+  document.getElementById("err-area").innerHTML = "";
+  document.getElementById("spinner-area").innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><p style="color:#fff;font-family:'Fredoka One',cursive;font-size:17px;margin:0">Cooking up activities... 🍳</p></div>`;
+
+  const ti = [];
+  if (types.includes("general")) ti.push('- 1-2 general ESL warm-up activities (speaking, listening, movement, games). Set activityType to "general".');
+  if (types.includes("fln")) ti.push('- 1-2 FLN activities (phonics, letter recognition, number sense — playful and multi-sensory). Set activityType to "fln".');
+  if (types.includes("bilingual")) ti.push('- 1-2 bilingual Kannada-English activities. Include actual Kannada script words (e.g. ನಮಸ್ತೆ, ಮನೆ, ನೀರು) in the description. Set activityType to "bilingual".');
+
+  const prompt = `You are a creative ESL teaching expert in India. Generate ${types.length >= 2 ? "4-5" : "3"} warm-up activities in English.
+Context: Grade: ${grade}, Meeting: ${meeting}, Class size: ${size||"not specified"}, Mode: ${state.mode}, Time: ${time||"flexible"}, Proficiency: ${prof||"mixed"}
+Activity types:
+${ti.join("\n")}
+Return ONLY a raw JSON array, no markdown, no code fences:
+[{"name":"...","emoji":"one emoji","activityType":"general","description":"2-3 sentences","timing":"X-Y minutes","format":"Individual|Pairs|Small Groups|Whole Class","facilitationTip":"one practical tip"}]`;
+
+  try {
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 2500, messages: [{ role: "user", content: prompt }] })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    let raw = data.content.map(b => b.text || "").join("").trim();
+    raw = raw.replace(/^```json\s*/i,"").replace(/^```\s*/i,"").replace(/\s*```$/i,"").trim();
+    const activities = JSON.parse(raw);
+    lastActivities = activities;
+    lastMeta = { grade, meeting, mode: state.mode, prof, size, time };
+    document.getElementById("spinner-area").innerHTML = "";
+    renderResults(activities);
+  } catch(e) {
+    document.getElementById("spinner-area").innerHTML = "";
+    document.getElementById("err-area").innerHTML = `<div class="err-box">❌ Error: ${e.message}</div>`;
+  }
+}
+
+function renderResults(activities) {
+  const cards = activities.map((a, i) => `
+    <div class="act-card" style="animation-delay:${i*0.08}s">
+      <div class="act-head">
+        <span class="act-emoji">${a.emoji}</span>
+        <div style="flex:1">
+          <div class="act-name">${a.name}</div>
+          <div class="badges">
+            <span class="badge by">⏱ ${a.timing}</span>
+            <span class="badge bw">${a.format}</span>
+            ${a.activityType==="fln"?'<span class="badge bg">🔤 FLN</span>':""}
+            ${a.activityType==="bilingual"?'<span class="badge bp">🇮🇳 Bilingual</span>':""}
+          </div>
+        </div>
+      </div>
+      <p class="act-desc">${a.description}</p>
+      <div class="tip-box"><strong>💡 Tip:</strong> ${a.facilitationTip}</div>
+    </div>`).join("");
+
+  document.getElementById("results-area").innerHTML = `
+    <div class="act-section">
+      <h2>🎯 Your Activities</h2>
+      <div class="act-cards">${cards}</div>
+      <button class="dl-btn" onclick="downloadHTML()">📄 Download for Printing (PDF)</button>
+      <button class="regen-btn" onclick="generate()">🔄 Regenerate New Ideas</button>
+    </div>`;
+}
+
+function downloadHTML() {
+  const activities = lastActivities;
+  const meta = lastMeta;
+  const metaStr = [meta.grade?`Grade ${meta.grade}`:"", meta.meeting, meta.mode, meta.prof, meta.size?`${meta.size} students`:"", meta.time].filter(Boolean).join(" · ");
+  const actHTML = activities.map((a,i) => `
+    <div class="card">
+      <div class="card-head"><span class="emoji">${a.emoji}</span>
+        <div><div class="name">${i+1}. ${a.name}</div>
+          <div class="badges">
+            <span class="badge by">⏱ ${a.timing}</span>
+            <span class="badge bw">${a.format}</span>
+            ${a.activityType==="fln"?'<span class="badge bg">🔤 FLN</span>':""}
+            ${a.activityType==="bilingual"?'<span class="badge bp">🇮🇳 Bilingual</span>':""}
+          </div>
+        </div>
+      </div>
+      <p class="desc">${a.description}</p>
+      <div class="tip"><strong>💡 Tip:</strong> ${a.facilitationTip}</div>
+    </div>`).join("");
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>ESL Warmup Activities</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet"/>
+<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Nunito',sans-serif;background:#fff;color:#222;max-width:760px;margin:0 auto;padding:32px 28px 48px;}
+.no-print{text-align:center;margin-bottom:28px;padding:20px;background:#fffbe6;border-radius:16px;border:2px dashed #e8c400;}
+.print-btn{background:#FFC700;color:#222;border:2.5px solid #222;border-radius:12px;padding:12px 36px;font-family:'Fredoka One',cursive;font-size:20px;cursor:pointer;box-shadow:3px 3px 0 #222;}
+.header{border-bottom:4px solid #FFC700;padding-bottom:16px;margin-bottom:24px;}.header h1{font-family:'Fredoka One',cursive;font-size:26px;color:#222;}
+.header .meta{font-size:13px;color:#666;margin-top:4px;font-weight:600;}.header .date{font-size:12px;color:#aaa;margin-top:4px;}
+.card{border:2px solid #222;border-radius:14px;padding:18px 20px;margin-bottom:20px;background:#fffbe6;page-break-inside:avoid;}
+.card-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:8px;}.emoji{font-size:28px;flex-shrink:0;}
+.name{font-family:'Fredoka One',cursive;font-size:19px;color:#222;line-height:1.3;}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px;}.badge{border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;border:1.5px solid #222;display:inline-block;}
+.by{background:#FFC700;color:#222;}.bw{background:#fff;color:#555;border-color:#ddd;}.bg{background:#f0fff0;color:#2a7a2a;border-color:#7dcf7d;}.bp{background:#fff0f6;color:#a0306a;border-color:#f0a0c0;}
+.desc{font-size:14px;color:#444;line-height:1.75;margin-top:10px;}.tip{background:#fff9e0;border-radius:10px;padding:10px 14px;border:1.5px dashed #e8c400;margin-top:10px;font-size:13px;color:#555;line-height:1.6;}
+.footer{margin-top:32px;border-top:2px solid #eee;padding-top:12px;font-size:12px;color:#aaa;text-align:center;}
+@media print{.no-print{display:none!important;}@page{margin:18mm;}body{padding:0;}}</style></head>
+<body>
+<div class="no-print"><p style="font-size:14px;color:#666;margin-bottom:12px;">Click the button below, then choose <strong>Save as PDF</strong></p>
+<button class="print-btn" onclick="window.print()">🖨️ Save as PDF</button></div>
+<div class="header"><h1>🗣️ ESL Warmup Activities</h1><div class="meta">${metaStr}</div>
+<div class="date">${new Date().toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"})}</div></div>
+${actHTML}
+<div class="footer">Generated with ESL Warmup Wizard · Happy teaching! 🎉</div>
+</body></html>`;
+
+  const encoded = "data:text/html;charset=utf-8," + encodeURIComponent(html);
+  const a = document.createElement("a"); a.href = encoded; a.download = "esl-warmup-activities.html";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+</script>
+</body>
+</html>
